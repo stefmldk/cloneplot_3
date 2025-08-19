@@ -1,0 +1,13 @@
+name: streamlit
+channels:
+    - conda-forge
+    - bioconda
+dependencies:
+  - streamlit
+  - plotly_express
+  - pyfish
+  - mpld3
+  - python-kaleido=0.2.1
+  - pip
+  - pip:
+      - streamlit-sortables  # A streamlit component
