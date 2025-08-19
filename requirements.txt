@@ -1,3 +1,4 @@
+python==3.4
 streamlit
 pandas
 matplotlib==3.7.3
@@ -5,5 +6,6 @@ plotly_express
 pyfish
 mpld3
 streamlit-sortables
-python-kaleido==0.2.0
+python-kaleido
+
 
