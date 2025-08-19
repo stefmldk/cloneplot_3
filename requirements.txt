@@ -1,4 +1,4 @@
-python==3.4
+python<3.5
 streamlit
 pandas
 matplotlib==3.7.3
@@ -7,5 +7,3 @@ pyfish
 mpld3
 streamlit-sortables
 python-kaleido
-
-
