@@ -5,4 +5,4 @@ plotly_express
 pyfish
 mpld3
 streamlit-sortables
-python-kaleido
+python-kaleido==1.0.0
