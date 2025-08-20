@@ -17,13 +17,7 @@ from pyfish import fish_plot, process_data, setup_figure
 
 script_dir = os.path.dirname(__file__)
 
-__version__ = '2.1.5'  # With statistical plots for ctDNA where primary samples are merged and metastatic samples are merged
-
-# New in this version is Pyclone_CFF changed to Cluster_CCF in UI and input files. Thus, for Cluster CCF views there is
-# no bacwards compatibility to older inout fileds
-
-# New in version 1.7: Added a new heat-map kind of plot similar to the one in Stephanies PhD: page 53 - fig. 3
-
+__version__ = '2.1.6'
 
 streamlit.set_page_config(layout="wide")
 
@@ -224,7 +218,9 @@ if uploaded_file is not None:
             grid_rows = int(number_of_plots / grid_columns) + 1 if number_of_plots % grid_columns else int(
                 number_of_plots / grid_columns)
 
-            subplot_size = visual_appearance.slider('Sub-plot size', min_value=100, max_value=800, value=400, step=100)
+            subplot_width = visual_appearance.number_input('Sub-plot width', min_value=100, max_value=1000, value=400, step=100)
+
+            plot_height_subtraction = visual_appearance.number_input('Plot height subtraction', min_value=-200, max_value=500, value=50, step=1)
 
             subplot_titles = list(display_combinations.keys())[:-1]
 
@@ -299,8 +295,8 @@ if uploaded_file is not None:
 
             ).update_layout(
                 hoverlabel_align='left',  # Necessary for streamlit to make text for all labels align left
-                width=subplot_size * grid_columns + (grid_columns - 1) * h_space + 120,
-                height=subplot_size * grid_rows + (grid_rows - 1) * v_space,
+                width=subplot_width * grid_columns + (grid_columns - 1) * h_space,
+                height=(subplot_width - plot_height_subtraction) * grid_rows + (grid_rows - 1) * v_space,
                 template=plot_theme
             ).update_yaxes(
                 range=range_y
@@ -311,7 +307,9 @@ if uploaded_file is not None:
         # Single Plot
         else:
             # User input - plot width
-            plot_width = visual_appearance.slider('Plot width', min_value=200, max_value=1000, value=800, step=100)
+            plot_width = visual_appearance.number_input('Plot width', min_value=200, max_value=2000, value=700, step=50)
+
+            plot_height_subtraction = visual_appearance.number_input('Plot height subtraction', min_value=0, max_value=1000, value=108, step=1)
 
             # User input - Flip axes
             flip_axes = streamlit.checkbox('Flip axes', value=False)
@@ -354,7 +352,8 @@ if uploaded_file is not None:
                                 range_y=range_y,
                                 color="Cluster",
                                 color_discrete_sequence=cluster_colors,
-                                width=plot_width + 108, height=plot_width,
+                                width=plot_width,
+                                height=plot_width - plot_height_subtraction,
                                 # facet_col='Sample',
                                 hover_data={
                                     # x_y_axes[0]: False,
@@ -798,7 +797,7 @@ if uploaded_file is not None:
                 }
 
                 # User input - Include only ctDNA mutations
-                ct_dna_mutations_only = streamlit.sidebar.checkbox('Include only ctDNA mutations', value=True)
+                ct_dna_mutations_only = streamlit.sidebar.checkbox('Include only ctDNA mutations', value=False)
                 ct_dna_data_frame = data_frame[data_frame[f'VAF_{plasma_sample}'] > 0]
                 if ct_dna_mutations_only:
                     test_df = ct_dna_data_frame
